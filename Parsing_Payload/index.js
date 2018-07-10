@@ -15,14 +15,15 @@
     // Get the payload, if any
     const DECODER = new STRING_DECODER('utf-8');//decode streams to utf-8
     let buffer = '';
-    // streams has two methods on data it will stream the data
+
+    // streams has two methods on data it will stream the data and end when straming is done
     req.on('data', (data)=>{
         buffer += DECODER.write(data);//decode the stream data and write to buffer 
     }); 
 
     // when streams the done streaming and it will be called whether data function is called or not.
     req.on('end', ()=>{
-
+        // adding to buffer when straming is done 
         buffer += DECODER.end();
 
         // Send the response
@@ -30,8 +31,7 @@
 
         // Log the request path
         console.log('Payload: ' + buffer);
-    });  
-    
+    });      
  });
 
  // Start the server and listen it on defined port
@@ -50,5 +50,4 @@
     Body: X
     server is listening at port: 3000
     Payload:
-
 */
