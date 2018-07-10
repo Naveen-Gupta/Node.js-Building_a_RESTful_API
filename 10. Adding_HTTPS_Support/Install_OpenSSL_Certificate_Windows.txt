@@ -1,0 +1,22 @@
+/* Installation of OpenSSL on Windows 10 */
+
+Step 1. Download the zip file as per OS from provided link:
+        https://indy.fulgan.com/SSL/
+    
+Step 2. UnZip the Downloaded file and save into C Drive
+
+Step 3. Copy the path and save path into environment varibles.
+
+Step 4. Go to terminal and check with openssl command.
+
+OR
+
+Refer the provided link:
+https://www.youtube.com/watch?v=PYLTtABP1F4
+
+
+-----------------------------------------------------------------------------
+
+~$  mkdir https
+~$  cd https
+~/https$ 
