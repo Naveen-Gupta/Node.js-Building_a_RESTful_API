@@ -1,6 +1,6 @@
 /**
  * @author Naveen Gupta
- * @description routing requests
+ * @description return json as output
  */
 
  // Dependencies
