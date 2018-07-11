@@ -5,15 +5,13 @@
 
  // Dependencies
  const HTTP = require('http');
-var x=0;
  // 
  const PORT = process.env.PORT || 3000;
  
  // The Server should respond to all requests with a string
  const SERVER = HTTP.createServer((req, res)=>{
-     x= x+1;
 
-    res.end('Hello World'+ x);
+    res.end('Hello World');
  });
 
  // Start the server and listen it on defined port
