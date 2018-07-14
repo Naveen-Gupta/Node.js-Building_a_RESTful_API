@@ -1,6 +1,6 @@
 /**
  * @author Naveen Gupta
- * @description Services for CRUD operations for user 
+ * @description making service checks that service is up or down 
  * 
  */
 
@@ -12,7 +12,7 @@ const STRING_DECODER = require('string_decoder').StringDecoder;
 const HANDLERS = require('./lib/handlers');
 const HELPERS = require('./lib/helpers');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // The Server should respond to all requests with a string
 const SERVER = HTTP.createServer((req, res) => {
@@ -79,7 +79,9 @@ const SERVER = HTTP.createServer((req, res) => {
 // Define the router
 const ROUTER = {
     'ping': HANDLERS.ping,
-    'users': HANDLERS.users
+    'users': HANDLERS.users,
+    'tokens': HANDLERS.tokens,
+    'checks': HANDLERS.checks
 };
 
 // Listening to server at defined port
@@ -90,88 +92,83 @@ SERVER.listen(PORT, function () {
 
  /*
  Output:
-  ------                               --------- ADD USER -----------                       --------------
+  ------                               --------- ADD TOKEN -----------                       --------------
   Method: POST
-  URL: localhost:3000/users
-  Body: {"firstName":"nvn","lastName":"gupta","phone":"0987654320","password": "htp@123","isAdmin":true}
+  URL: localhost:5000/tokens
+  Body: {"phone":"0888808888","password": "htp@123"}
   Response: Status: 200, {}
 
-  ---- user with same phone exist ----
+  ---- typed wrong password ----
   Method: POST
-  URL: localhost:3000/users
-  Body: {"firstName":"nvn","lastName":"gupta","phone":"0987654320","password": "htp@123","isAdmin":true}
-  Response: Status: 400, {"Error":"A user exists with same phone number"}
+  URL: localhost:5000/tokens
+  Body: {"phone":"0888808888","password": "htp@1234"}
+  Response: Status: 400, {"Error":"Password did not match the specified user's stored password"}
 
   ---- changed url ----
   Method: POST
-  URL: localhost:3000/
-  Body: {"firstName":"nvn","lastName":"gupta","phone":"0987654320","password": "htp@123","isAdmin":true}
+  URL: localhost:5000/
+  Body: {"phone":"0888808888","password": "htp@123"}
   Response: Status: 404, {}
 
   ---- missed parameter ----
   Method: POST
-  URL: localhost:3000/users
-  Body: {"lastName":"gupta","phone":"0987654320","password": "htp@123","isAdmin":true}
+  URL: localhost:3000/tokens
+  Body: {"phone":"0888808888"}
   Response: Status: 404,  {"Error": "Missing required fields"}
 
  
-  ------                               --------- FETCH USER DETAILS -----------                       --------------
+  ------                               --------- FETCH TOKEN DETAILS -----------                       --------------
   Method: GET
-  URL: localhost:3000/users?phone=0987654321
+  URL: localhost:5000/tokens?id=zrhfyedysn9x8v2kswed
   Body: 
-  Response: Status: 200,    {"firstName":"nvn","lastName":"gupta","phone":"0987654321","isAdmin":true}
+  Response: Status: 200,    {"phone":"0888808888","id":"zrhfyedysn9x8v2kswed","expires":1531486260111}
 
-  ---- wrong phone ----
+  ---- wrong id or token ----
   Method: GET
-  URL: localhost:3000/users?phone=0987654329
+  URL: localhost:5000/tokens?id=zrhfyedysn9x8v2kswed!@#$
   Body: 
   Response: Status: 404,     {}
 
   Method: GET
-  URL: localhost:3000/users
+  URL: localhost:5000/tokens
   Body: 
   Response: Status: 400,     {"Error: ":"Missing required field"}
 
  
-  ------                               --------- UPDATE USER DETAILS -----------                       --------------
+  ------                               --------- UPDATE TOKEN DETAILS -----------                       --------------
   ---- Body not been sent ----
   Method: PUT
-  URL:  localhost:3000/users?phone=0987654321
-  Body:
-  Response: Status: 400,     {"Error: ":"Missing required field"}
+  URL:  localhost:5000/tokens
+  Body: {"id": "zrhfyedysn9x8v2kswed"}
+  Response: Status: 400,     {"Error":"Missing required field(s) or field(s) are invalid"}
   
-  ---- sending field not defined (except firstName, lastName, password) ----
+  ---- sending field not defined (except id, extend) ----
   Method: PUT
-  URL:  localhost:3000/users?phone=0987654321
-  Body: {"address": "address"}
-  Response: Status: 400,     {"Error: ":"Missing required field"}
+  URL:  localhost:5000/tokens
+  Body:  {"id": "zrhfyedysn9x8v2kswed", "sss": false} 
+  Response: Status: 400,     {"Error":"Missing required field(s) or field(s) are invalid"}
 
   Method: PUT
-  URL:  localhost:3000/users?phone=0987654321
-  Body: {"address": "address"}
-  Response: Status: 400,     {"Error: ":"Missing required field"}
-
-  Method: PUT
-  URL:  localhost:3000/users?phone=0987654321
-  Body: {"firstName": "Naveen"}
+  URL: localhost:5000/tokens
+  Body: {"id": "jrqc9063al9eowhp5z70", "extend": true}
   Response: Status: 200,     {}
 
 
   ----                                  ---- DELETE THE USER ----                       ------
   Method: DELETE
-  URL:  localhost:3000/users?phone=0987654322
+  URL: localhost:5000/tokens?id=jrqc9063al9eowhp5z79
   Body:
-  Response: Status: 400,     {"Error":"Could not find the specified user"}
+  Response: Status: 400,     {"Error":"Could not find the specified token"}
 
-  ---- missing the required field (phone) ----
+  ---- missing the required field (id) ----
   Method: DELETE
-  URL:  localhost:3000/users
+  URL:  localhost:5000/tokens
   Body:
   Response: Status: 400,     {"Error: ":"Missing required field"}
 
   ---- providing correct user ----
   Method: DELETE
-  URL:  localhost:3000/users?phone=0987654321
+  URL:  localhost:5000/tokens?id=jrqc9063al9eowhp5z70
   Body:
   Response: Status: 200,     {}
  
